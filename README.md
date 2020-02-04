@@ -4,9 +4,46 @@ https://www.cnblogs.com/jpfss/p/10870002.html
 
 https://edu.csdn.net/course/detail/5523
 
-# 1 drools规则语法
+# 1 目录结构
 
-## 1.1 规则描述语言目录结构
+![1580799932577](A_Drools.assets/1580799932577.png)
+
+| 文件        | 作用                                                     |
+| ----------- | -------------------------------------------------------- |
+| *.drl       | 是Drools中的规则文件，规则文件的编写，遵循Drools规则语法 |
+| kmodule.xml | 这个配置文件告诉代码规则文件drl在哪里                    |
+| pom.xml     | maven依赖                                                |
+
+***.drl文件示例：**
+
+```
+package com.rules
+import com.drools.model.Car
+import com.drools.model.Person
+
+rule "test-drools7-older-than-60"
+when
+    $car : Car(person.age > 60)
+then
+    $car.setDiscount(80);
+    System.out.println("test-drools7-older than 60：" + $car.getPerson().getAge());
+end
+```
+
+**kmodule.xml文件示例：**
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<kmodule xmlns="http://www.drools.org/xsd/kmodule">
+    <kbase name="rules" packages="com.rules">
+        <ksession name="all-rules"/>
+    </kbase>
+</kmodule>
+```
+
+# 2 drl文件
+
+## 2.1 规则描述语言目录结构
 
 ![img](A_Drools.assets/840965-7e8cac0954ee2cbd.png)
 
@@ -48,7 +85,7 @@ end
 
 
 
-## 1.2 规则描述语言详情
+## 2.2 规则描述语言详情
 
 **属性详情**
 
@@ -129,3 +166,22 @@ rule "Rule 03"
           retract( $number );
 end
 ```
+
+# 3 kmodule.xml文件
+
+![Kmodule](A_Drools.assets/Kmodule.png)
+
+- Kmodule： 中可以包含一个到多个 kbase,分别对应 drl 的规则文件。
+
+- Kbase： 需要一个唯一的 name,可以取任意字符串。
+
+- packages： 为drl文件所在resource目录下的路径。注意区分drl文件中的package与此处的package不一定相同。多个包用逗号分隔。默认情况下会扫描 resources目录下所有(包含子目录)规则文件。
+
+- kbase的default属性：标示当前KieBase是不是默认的,如果是默认的则不用名称 就可以查找到该 KieBase,但每个 module 最多只能有一个默认 -
+   KieBase。
+
+- kbase的ksession： kbase下面可以有一个或多个 ksession，ksession 的 name 属性必须设置,且必须唯一。
+
+  
+
+# 4 常用的Api
