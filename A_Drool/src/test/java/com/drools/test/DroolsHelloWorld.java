@@ -5,6 +5,9 @@ import com.drools.model.Person;
 import org.junit.Test;
 import org.kie.api.runtime.KieSession;
 
+/**
+ * Drools hello world
+ */
 public class DroolsHelloWorld extends BaseTest{
     @Test
     public void helloWorld(){
