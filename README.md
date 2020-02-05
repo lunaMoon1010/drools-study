@@ -1,31 +1,4 @@
-# 参考：
 
-https://www.cnblogs.com/jpfss/p/10870002.html
-
-https://edu.csdn.net/course/detail/5523
-
-# 1 目录结构
-
-![1580799932577](A_Drools.assets/1580799932577.png)
-
-| 文件        | 作用                                                     |
-| ----------- | -------------------------------------------------------- |
-| *.drl       | 是Drools中的规则文件，规则文件的编写，遵循Drools规则语法 |
-| kmodule.xml | 这个配置文件告诉代码规则文件drl在哪里                    |
-| pom.xml     | maven依赖                                                |
-
-***.drl文件示例：**
-
-```
-package com.rules
-import com.drools.model.Car
-import com.drools.model.Person
-
-rule "test-drools7-older-than-60"
-when
-    $car : Car(person.age > 60)
-then
-    $car.setDiscount(80);
     System.out.println("test-drools7-older than 60：" + $car.getPerson().getAge());
 end
 ```
@@ -185,3 +158,128 @@ end
   
 
 # 4 常用的Api
+
+## 4.1 KieServices
+
+**描述：**
+
+1. 提供访问 KIE 关于构建和运行的相关对象 
+
+- 获取 KieContainer，利用 KieContainer 来访问 KBase 和 KSession 等信息。
+- 获取KieRepository 对象，利用 KieRepository 来管理 KieModule 等。 
+
+2. KieServices 就是一个中心，通过它来获取的各种对象来完成规则构建、管理和执行等操作 
+
+**方法：**
+
+```java
+KieServices get(); //工厂方法，创建自身
+KieResources getResources();
+KieContainer getKieClasspathContainer();
+KieBaseConfiguration newKieBaseConfiguration();
+....
+```
+
+------
+
+
+
+## 4.2 KieContainer
+
+**描述：**
+
+1. KieContainer 就是一个 KieBase 的容器 ，提供获得KieBase的方法
+2. KieContainer的方法内部依旧通过  KieSession
+
+**方法：**
+
+```Java
+KieBase getKieBase();
+KieBase newKieBase(KieBaseConfiguration conf);
+KieSession newKieSession();
+....
+```
+
+------
+
+
+
+## 4.3 KieBase
+
+**描述：**
+
+1. 一个知识仓库，包含了若干的规则、流程、方法等
+2. KieBase本身并不包含运行时的数据之类的，如果需要执行规则KieBase中的规则的话，就需要根据KieBase创建KieSession
+
+**方法：**
+
+```Java
+// 查询规则的包名
+Collection<KiePackage> getKiePackages(); 
+KiePackage getKiePackage( String packageName );
+// 去除容器中包名的定义
+void removeKiePackage( String packageName );
+// 根据包名和规则名得到规则
+Rule getRule(String packageName, String ruleName );
+// 根据报名和规则名删除规则
+void removeRule(String packageName, String ruleName );
+// 根据包名和查询名返回查询结果
+Query getQuery(String packageName,  String queryName );
+....
+```
+
+------
+
+> KieSession
+
+![1580881978179](A_Drools.assets/1580881978179.png)
+
+**描述：**
+
+1. 基于KieBase创建，与Drools引擎打交道的会话
+
+**方法：**
+
+```java
+// StatefulRuleSession 接口中
+int fireAllRules();
+// EntryPoint 
+FactHandle insert(Object object);
+....
+```
+
+------
+
+## 4.4 KieRepository
+
+**描述：**
+
+1. KieRepository是一个单例对象，它是存放KieModule的仓库，KieModule由kmodule.xml文件定义
+
+**方法：**
+
+``` Java
+// 添加 KieModule
+void addKieModule(KieModule kModule);
+// 获取 KieModule
+KieModule getKieModule(ReleaseId releaseId);
+// 移除 KieModule
+KieModule removeKieModule(ReleaseId releaseId);
+....
+```
+
+------
+
+> KieProject
+
+**描述：**
+
+1. KieContainer通过KieProject来初始化、构造KieModule，并将KieModule存放到KieRepository中，然后KieContainer可以通过KieProject来查找KieModule定义的信息，并根据这些信息构造KieBase和KieSession。
+
+**方法：**
+
+```java
+KieBaseModel getKieBaseModel(String var1);
+....
+```
+
