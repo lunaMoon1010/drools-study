@@ -1,0 +1,40 @@
+package com.rules
+import com.drools.model2.Person
+import com.drools.model2.Student
+import com.drools.model2.School
+import com.drools.model2.State
+
+rule "person"
+no-loop true
+when
+    $p : Person(age > 35)
+    $state : State(nodeList contains "start", nodeList not contains "person")
+then
+    $state.getNodeList().add("person");
+    update($state)
+    System.out.println("person");
+    System.out.println("$state：" + $state.getNodeList());
+end
+
+rule "student"
+no-loop true
+when
+   $student : Student(age > 6)
+   $state : State(nodeList contains "start", nodeList not contains "student")
+then
+   $state.getNodeList().add("student");
+   update($state)
+   System.out.println("student");
+   System.out.println("$state：" + $state.getNodeList());
+end
+
+rule "school"
+no-loop true
+when
+   $state : State(nodeList contains "student", nodeList contains "person", nodeList not contains "school")
+   $school : School(name == "GoodSchool")
+   $student : Student()
+   $person : Person()
+then
+   System.out.println("入了一个好学校");
+end

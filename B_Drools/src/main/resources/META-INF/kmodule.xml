@@ -3,4 +3,8 @@
     <kbase name="rules" packages="com.rules">
         <ksession name="all-rules"/>
     </kbase>
+
+    <kbase name="flowRules" packages="com.flowRules">
+        <ksession name="flowRules"/>
+    </kbase>
 </kmodule>
