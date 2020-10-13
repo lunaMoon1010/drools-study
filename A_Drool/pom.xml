@@ -10,7 +10,7 @@
 
     <properties>
         <drools.version>7.0.0.Final</drools.version>
-        <juint.version>4.12</juint.version>
+        <juint.version>4.13.1</juint.version>
     </properties>
 
     <dependencies>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
